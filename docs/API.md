@@ -894,7 +894,11 @@ objectsCh := make(chan minio.ObjectInfo)
 go func() {
 	defer close(objectsCh)
 	// List all objects from a bucket-name with a matching prefix.
-	for object := range minioClient.ListObjects(context.Background(), "my-bucketname", "my-prefixname", true, nil) {
+	opts := minio.ListObjectsOptions{
+       		Prefix: "my-prefixname",
+       		Recursive: true,
+	}
+	for object := range minioClient.ListObjects(context.Background(), "my-bucketname", opts) {
 		if object.Err != nil {
 			log.Fatalln(object.Err)
 		}
